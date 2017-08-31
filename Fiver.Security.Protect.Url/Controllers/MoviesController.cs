@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Fiver.Security.Protect.Url.Models;
 using System.Linq;
 using Microsoft.AspNetCore.DataProtection;
+using System;
 
 namespace Fiver.Security.Protect.Url.Controllers
 {
@@ -10,10 +11,13 @@ namespace Fiver.Security.Protect.Url.Controllers
     public class MoviesController : Controller
     {
         private readonly IDataProtector protector;
+        //private readonly ITimeLimitedDataProtector protector;
 
         public MoviesController(IDataProtectionProvider provider)
         {
             this.protector = provider.CreateProtector("protect_my_query_string");
+            //this.protector = provider.CreateProtector("protect_my_query_string")
+            //                         .ToTimeLimitedDataProtector();
         }
 
         [HttpGet]
@@ -25,6 +29,7 @@ namespace Fiver.Security.Protect.Url.Controllers
             {
                 //item.Id,
                 Id = this.protector.Protect(item.Id.ToString()),
+                //Id = this.protector.Protect(item.Id.ToString(), TimeSpan.FromSeconds(10)),
                 item.Title,
                 item.ReleaseYear,
                 item.Summary
