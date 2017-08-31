@@ -4,6 +4,7 @@ using Fiver.Security.Protect.Url.Models;
 using System.Linq;
 using Microsoft.AspNetCore.DataProtection;
 using System;
+using Fiver.Security.Protect.Url.Lib;
 
 namespace Fiver.Security.Protect.Url.Controllers
 {
@@ -38,14 +39,25 @@ namespace Fiver.Security.Protect.Url.Controllers
             return Ok(outputModel);
         }
 
-        [HttpGet("{id}")]
-        public IActionResult Get(string id)
-        {
-            var orignalId = int.Parse(this.protector.Unprotect(id));
+        //[HttpGet("{id}")]
+        //public IActionResult Get(string id)
+        //{
+        //    var orignalId = int.Parse(this.protector.Unprotect(id));
 
-            var model = GetMovies(); // simulate call to repository
+        //    var model = GetMovies(); // simulate call to repository
             
-            var outputModel = model.Where(item => item.Id == orignalId);
+        //    var outputModel = model.Where(item => item.Id == orignalId);
+
+        //    return Ok(outputModel);
+        //}
+
+        [HttpGet("{id}")]
+        [DecryptReference]
+        public IActionResult Get(int id)
+        {
+            var model = GetMovies(); // simulate call to repository
+
+            var outputModel = model.Where(item => item.Id == id);
 
             return Ok(outputModel);
         }
